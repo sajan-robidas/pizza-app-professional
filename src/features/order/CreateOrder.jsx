@@ -1,4 +1,6 @@
-import { Form, useActionData, useNavigation } from "react-router-dom";
+import { Form, redirect, useActionData, useNavigation } from "react-router-dom";
+import { createOrder } from "../../services/apiRestaurant";
+import Button from "../../ui/Button";
 // import { createOrder } from "../../services/apiRestaurant";
 
 // https://uibakery.io/regex-library/phone-number
@@ -39,38 +41,52 @@ function CreateOrder() {
 
   const cart = fakeCart;
   return (
-    <div>
-      <h2>Ready to order? Lets go!</h2>
+    <div className="mt-10">
+      <h2 className="text-xl font-bold text-stone-800">
+        Ready to order? Lets go!
+      </h2>
       <Form method="POST">
-        <div>
-          <label>First Name</label>
-          <input type="text" name="customer" required />
+        <div className="mt-5">
+          <label className="mb-3 block text-base font-medium text-[#07074D]">
+            First Name
+          </label>
+          <input type="text" name="customer" required className="input" />
         </div>
-        <div>
-          <label>Phone Number</label>
+        <div className="mt-5">
+          <label className="mb-3 block text-base font-medium text-[#07074D]">
+            Phone Number
+          </label>
           <div>
-            <input type="tel" name="phone" required />
+            <input type="tel" name="phone" required className="input" />
           </div>
-          {formErrors?.phone && <p>{formErrors.phone}</p>}
+          {formErrors?.phone && (
+            <p className="mt-2 text-sm text-red-500">{formErrors.phone}</p>
+          )}
         </div>
-        <div>
-          <label>Address</label>
+        <div className="mt-5">
+          <label className="mb-3 block text-base font-medium text-[#07074D]">
+            Address
+          </label>
           <div>
-            <input type="text" name="address" required />
+            <input type="text" name="address" required className="input" />
           </div>
         </div>
-        <div>
-          <input type="checkbox" name="priority" id="priority" />
-          <label htmlFor="priority">want to yo give your order priority</label>
+        <div className="mt-5 flex items-center">
+          <input
+            type="checkbox"
+            name="priority"
+            id="priority"
+            className="h-4 w-4 accent-yellow-300 focus:ring focus:ring-yellow-300 focus:ring-offset-2"
+          />
+          <label htmlFor="priority" className="ml-3 font-bold text-stone-800">
+            want to yo give your order priority
+          </label>
         </div>
-        <div>
+        <div className="mt-5">
           <input type="hidden" name="cart" value={JSON.stringify(cart)} />
-          <button
-            disabled={isSubmitting}
-            className="inline-block rounded-full bg-yellow-400 px-4 py-3 font-semibold uppercase tracking-wide text-stone-800 transition-colors duration-300 hover:bg-yellow-300 focus:bg-yellow-300 focus:outline-none focus:ring focus:ring-yellow-300 focus:ring-offset-2"
-          >
+          <Button type="primary">
             {isSubmitting ? "Placing order...." : "Order now"}
-          </button>
+          </Button>
         </div>
       </Form>
     </div>
@@ -99,9 +115,8 @@ export async function action({ request }) {
 
   if (Object.keys(errors).length > 0) return errors;
 
-  // const newOrder = await createOrder(order);
-  // return redirect(`/order/${newOrder.id}`);
-  return null;
+  const newOrder = await createOrder(order);
+  return redirect(`/order/${newOrder.id}`);
 }
 
 export default CreateOrder;
